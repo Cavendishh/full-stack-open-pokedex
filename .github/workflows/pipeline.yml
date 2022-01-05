@@ -13,6 +13,9 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
@@ -40,9 +43,17 @@ jobs:
         if: ${{ github.event_name == 'push' }}
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: 'pokedex-pipeline-app'
           heroku_email: 'kavanderjanne@gmail.com'
           healthcheck: 'https://pokedex-pipeline-app.herokuapp.com/healthcheck'
           checkstring: 'ok'
           rollbackonhealthcheckfailed: true
+
+      - name: Bump version and push tag
+        if: ${{ github.event_name == 'push' }}
+        uses: anothrNick/github-tag-action@1.33.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: 'patch'
