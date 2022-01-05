@@ -1,8 +1,11 @@
 name: Health check
 
 on:
-  schedule:
-    - cron: '* * * * *' # https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows#scheduled-events
+  push:
+    branches:
+      - master
+  # schedule:
+  # - cron: '* * * * *' # https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows#scheduled-events
 
 jobs:
   healthcheck:
