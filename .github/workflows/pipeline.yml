@@ -16,21 +16,29 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+
       - name: Install dependencies
         run: npm install
+
       - name: Lint code
         run: npm run eslint
+
       - name: Build app
         run: npm run build
+
       - name: Run tests
         run: npm test
+
       - name: E2E tests
         uses: cypress-io/github-action@v2
         with:
           command: npm run test:e2e
           start: npm run start-prod
           wait-on: http://localhost:5000
-      - uses: akhileshns/heroku-deploy@v3.12.12
+
+      - name: Deploy
+        if: ${{ github.event_name == 'push' }}
+        uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: 'pokedex-pipeline-app'
